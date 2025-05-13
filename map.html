@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Démarches Visa Maroc</title>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map { height: 90vh; width: 100%; }
+    .popup-content { max-width: 200px; }
+  </style>
+</head>
+<body>
+  <h2 style="text-align:center">Vérifiez les démarches de visa pour venir au Maroc</h2>
+  <div id="map"></div>
+
+  <script>
+    const map = L.map('map').setView([20, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 5,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const countriesData = [
+      {
+        name: "France",
+        lat: 46.603354,
+        lng: 1.888334,
+        visaInfo: "Visa étudiant requis. Documents : Passeport, lettre d'admission, preuves financières. RDV à l'ambassade.",
+        embassyLink: "https://www.amb-maroc.fr/"
+      },
+      {
+        name: "Côte d'Ivoire",
+        lat: 7.54,
+        lng: -5.55,
+        visaInfo: "Visa requis. Prévoir le passeport, une photo d'identité, une lettre d'invitation, et une preuve de logement.",
+        embassyLink: "https://www.embassymorocco.ci/"
+      },
+      {
+        name: "Cameroun",
+        lat: 5.0,
+        lng: 12.0,
+        visaInfo: "Rendez-vous obligatoire à l'ambassade du Maroc pour visa étudiant. Dossier à préparer avec l'école.",
+        embassyLink: "https://ambamaroc.cm/"
+      },
+      {
+        name: "Centrafrique",
+        lat: 6.6111,
+        lng: 20.9394,
+        visaInfo: "Contactez l'ambassade du Maroc à Bangui pour les modalités de visa étudiant.",
+        embassyLink: "https://www.diplomatie.ma/fr/centrafrique"
+      },
+      {
+        name: "Mali",
+        lat: 17.57,
+        lng: -3.99,
+        visaInfo: "Documents requis : lettre d'admission, passeport valide, formulaire de demande de visa.",
+        embassyLink: "https://www.ambamaroc.ml/"
+      },
+      {
+        name: "Sénégal",
+        lat: 14.5,
+        lng: -14.45,
+        visaInfo: "Demandez un visa étudiant via l'ambassade du Maroc à Dakar. Prendre RDV en ligne si possible.",
+        embassyLink: "https://www.ambamaroc.sn/"
+      },
+      {
+        name: "Gabon",
+        lat: -0.8037,
+        lng: 11.6094,
+        visaInfo: "Visa étudiant délivré sur présentation des justificatifs d'admission et moyens financiers.",
+        embassyLink: "https://www.ambamaroc.ga/"
+      },
+      {
+        name: "RDC",
+        lat: -4.0383,
+        lng: 21.7587,
+        visaInfo: "Visa étudiant à demander auprès de l'ambassade à Kinshasa avec documents académiques.",
+        embassyLink: "https://www.diplomatie.ma/fr/republiquedemocratiqueducongo"
+      },
+      {
+        name: "Congo",
+        lat: -0.228,
+        lng: 15.8277,
+        visaInfo: "Prévoir passeport, lettre d'admission, et justificatifs de ressources. Démarches à Brazzaville.",
+        embassyLink: "https://www.diplomatie.ma/fr/congo"
+      },
+      {
+        name: "Burkina Faso",
+        lat: 12.2383,
+        lng: -1.5616,
+        visaInfo: "Demander un visa étudiant auprès de l’ambassade avec les documents académiques et financiers.",
+        embassyLink: "https://www.ambamaroc.bf/"
+      },
+      {
+        name: "Niger",
+        lat: 17.6078,
+        lng: 8.0817,
+        visaInfo: "Prendre rendez-vous à l’ambassade à Niamey pour soumettre votre dossier de visa étudiant.",
+        embassyLink: "https://www.diplomatie.ma/fr/niger"
+      },
+      {
+        name: "Tchad",
+        lat: 15.4542,
+        lng: 18.7322,
+        visaInfo: "Visa étudiant délivré par l’ambassade du Maroc à N’Djamena après vérification du dossier.",
+        embassyLink: "https://www.diplomatie.ma/fr/tchad"
+      },
+      {
+        name: "Algérie",
+        lat: 28.0339,
+        lng: 1.6596,
+        visaInfo: "Des accords bilatéraux existent, se renseigner auprès du consulat ou de l’ambassade.",
+        embassyLink: "https://www.diplomatie.ma/fr/algerie"
+      },
+      {
+        name: "Tunisie",
+        lat: 33.8869,
+        lng: 9.5375,
+        visaInfo: "Les démarches de visa étudiant sont simplifiées. Contacter l’ambassade pour en savoir plus.",
+        embassyLink: "https://www.diplomatie.ma/fr/tunisie"
+      },
+      {
+        name: "Cap-Vert",
+        lat: 16.5388,
+        lng: -23.0418,
+        visaInfo: "Visa à demander via l’ambassade du Maroc accréditée ou via une représentation régionale.",
+        embassyLink: "https://www.diplomatie.ma/fr/capvert"
+      },
+      {
+        name: "Égypte",
+        lat: 26.8206,
+        lng: 30.8025,
+        visaInfo: "Rendez-vous à prendre à l’ambassade du Maroc au Caire pour demande de visa étudiant.",
+        embassyLink: "https://www.diplomatie.ma/fr/egypte"
+      },
+      {
+        name: "Madagascar",
+        lat: -18.7669,
+        lng: 46.8691,
+        visaInfo: "La demande de visa étudiant se fait à l’ambassade du Maroc à Antananarivo.",
+        embassyLink: "https://www.diplomatie.ma/fr/madagascar"
+      }
+    ];
+
+    countriesData.forEach(country => {
+      const marker = L.marker([country.lat, country.lng]).addTo(map);
+      marker.bindPopup(`
+        <div class='popup-content'>
+          <strong>${country.name}</strong><br>
+          ${country.visaInfo}<br>
+          <a href='${country.embassyLink}' target='_blank'>Voir l'ambassade</a>
+        </div>
+      `);
+    });
+  </script>
+</body>
+</html>
